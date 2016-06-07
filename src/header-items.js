@@ -1,16 +1,22 @@
 (function () {
 'use strict';
 
-	function HeaderItems(root) {
-		this._root = root;
-		this._title = this._root.innerHTML;
-
-		this._root.addEventListener('click', this._showItems.bind(this));
+	function HeaderItems(headerName) {
+		this._headerName = headerName;
+		this._storeToken = this._addStoreListener();
 	}
 
-	HeaderItems.prototype._showItems = function () {
-		app.store.receive(app.store.types.NAVIGATE_TO_PAGE, this._title);
+	HeaderItems.prototype._addStoreListener = function () {
+		return app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._buildHeaderList);
 	}
 
-	app.NavbarItem = NavbarItem;
+	HeaderItems.prototype._removeStoreListener = function () {
+		this._storeToken();
+	}
+
+	HeaderItems.prototype._buildHeaderList = function () {
+		//Get header list and build headerItem list
+	}
+
+	app.HeaderItems = HeaderItems;
 })();

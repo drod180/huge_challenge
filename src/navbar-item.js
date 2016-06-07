@@ -5,11 +5,11 @@
 		this._root = root;
 		this._name = this._root.innerHTML;
 
-		this._root.addEventListener('click', this._showItems.bind(this));
+		this._root.addEventListener('click', this._clickHeader.bind(this));
 	}
 
-	NavbarItem.prototype._showItems = function () {
-		app.store.receive(app.store.types.SHOW_HEADER_ITEMS, this._name);
+	NavbarItem.prototype._clickHeader = function () {
+		app.actions.updateHeaderItems(this._name);
 	}
 
 	app.NavbarItem = NavbarItem;

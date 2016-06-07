@@ -3,11 +3,8 @@
     start: function () {
       var apiUtil = app.apiUtil;
 			var headers = document.getElementById('navbar-header').children;
-			var navBarItems = [];
-
-			[].forEach.call(headers, function (header) {
-				navBarItems.push(new app.NavbarItem(header));
-			});
+			var navbar = new app.Navbar(headers);
+			
 			apiUtil.fetchItems();
     }
   }
