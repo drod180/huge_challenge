@@ -1,16 +1,31 @@
 (function () {
  "use strict";
 
+	var listener = {};
 	var items = {};
 	var currentHeader = null;
-	var currentItem = null;
 
   app.store = {
     types: {
 			RECEIVE_ITEMS: 'RECEIVE_ITEMS',
-			SHOW_HEADER_ITEMS: 'SHOW_HEADER_ITEMS',
-			SHOW_SECONDARY_ITEMS: 'SHOW_SECONDARY_ITEMS'
+			RECEIVE_NAVBAR_ITEM: 'RECEIVE_NAVBAR_ITEM',
+			RECEIVE_HEADER_ITEM: 'RECEIVE_HEADER_ITEM'
     },
+
+		addListener: function (type, callback) {
+			if (! listener[type]) {
+				listener[type] = callback;
+			} else {
+				listener[type].push(callback);
+			}
+
+			//return function to allow for removing a listener
+			return (function () {
+				listener = listener.filter(function (cb) {
+					return cb !== callback;
+				});
+			);
+		},
 
     receive: function (type, data) {
       var types = app.store.types;
@@ -18,14 +33,17 @@
 				case types.RECEIVE_ITEMS:
           items = data;
           break;
-				case types.SHOW_HEADER_ITEMS:
+				case types.RECEIVE_NAVBAR_ITEM:
 					currentHeader = data;
-					currentItem = null;
 					break;
-				case types.SHOW_SECONDARY_ITEMS:
-					currentItem = data;
+				case types.RECEIVE_HEADER_ITEM:
 					break;
 			}
+
+			listener[key].forEach( function (callback) {
+				callback();
+			})
 		}
+
   };
 })();

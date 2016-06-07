@@ -36,36 +36,12 @@
 	app.apiUtil = {
 		fetchItems: function () {
 			request({
-	        url: "/api/nav.json/#careers",
+	        url: "/api/nav.json",
 	        onLoad: function (data) {
 	          app.store.receive(app.store.types.RECEIVE_ITEMS, data);
 	        },
 	        onError: function () {
 	          app.store.receive(app.store.types.ERROR_ITEMS);
-	        }
-	      });
-		},
-
-		fetchHeaderItems: function (header) {
-			request({
-	        url: "http://localhost:3000/#/" + header,
-	        onLoad: function (data) {
-	          app.store.receive(app.store.types.RECEIVE_HEADERS_ITEMS, data);
-	        },
-	        onError: function () {
-	          app.store.receive(app.store.types.ERROR_HEADERS_ITEMS);
-	        }
-	      });
-		},
-
-		fetchSubItems: function (header, item) {
-			request({
-	        url: "#/" + header + "/" + item,
-	        onLoad: function (data) {
-	          app.store.receive(app.store.types.RECEIVE_SUB_ITEMS, data);
-	        },
-	        onError: function () {
-	          app.store.receive(app.store.types.ERROR_SUB_ITEMS);
 	        }
 	      });
 		}
@@ -75,7 +51,12 @@
   app.main = {
     start: function () {
       var apiUtil = app.apiUtil;
+			var headers = document.getElementById('navbar-header').children;
+			var navBarItems = [];
 
+			[].forEach.call(headers, function (header) {
+				navBarItems.push(new app.NavbarItem(header));
+			});
 			apiUtil.fetchItems();
     }
   }
@@ -83,33 +64,46 @@
 (function () {
 'use strict';
 
-	function NavbarItem(root, name) {
+	function NavbarItem(root) {
 		this._root = root;
-		this._name = name;
+		this._name = this._root.innerHTML;
+
+		this._root.addEventListener('click', this._showItems.bind(this));
 	}
+
+	NavbarItem.prototype._showItems = function () {
+		debugger
+		app.store.receive(app.store.types.SHOW_HEADER_ITEMS, this._name);
+	}
+
+	app.NavbarItem = NavbarItem;
 })();
 (function () {
  "use strict";
 
 	var items = {};
-	var subItems = [];
+	var currentHeader = null;
+	var currentItem = null;
 
   app.store = {
     types: {
 			RECEIVE_ITEMS: 'RECEIVE_ITEMS',
-			RECEIVE_SUB_ITEMS: 'RECEIVE_SUB_ITEMS'
+			SHOW_HEADER_ITEMS: 'SHOW_HEADER_ITEMS',
+			SHOW_SECONDARY_ITEMS: 'SHOW_SECONDARY_ITEMS'
     },
 
     receive: function (type, data) {
-      // Update the store if needed
       var types = app.store.types;
       switch (type) {
 				case types.RECEIVE_ITEMS:
           items = data;
-					debugger
           break;
-				case types.RECEIVE_SUB_ITEMS:
-					subItems = data;
+				case types.SHOW_HEADER_ITEMS:
+					currentHeader = data;
+					currentItem = null;
+					break;
+				case types.SHOW_SECONDARY_ITEMS:
+					currentItem = data;
 					break;
 			}
 		}
