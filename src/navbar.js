@@ -1,9 +1,8 @@
 (function () {
 'use strict';
 
-	function Navbar(headers) {
+	function Navbar() {
 		this._root = document.getElementById("navbar-header");
-		this._headers = headers;
 		this._navbarItems = [];
 		this._storeToken = this._addStoreListener();
 	}

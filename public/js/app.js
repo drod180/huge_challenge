@@ -102,9 +102,8 @@
   app.main = {
     start: function () {
       var apiUtil = app.apiUtil;
-			var headers = document.getElementById('navbar-header').children;
-			var navbar = new app.Navbar(headers);
-			
+			var navbar = new app.Navbar();
+
 			apiUtil.fetchItems();
     }
   }
@@ -127,7 +126,6 @@
 	}
 
 	NavbarItem.prototype._clickHeader = function () {
-		debugger
 		app.actions.updateHeaderItems(this._name);
 	}
 
@@ -136,9 +134,8 @@
 (function () {
 'use strict';
 
-	function Navbar(headers) {
+	function Navbar() {
 		this._root = document.getElementById("navbar-header");
-		this._headers = headers;
 		this._navbarItems = [];
 		this._storeToken = this._addStoreListener();
 	}
@@ -152,7 +149,6 @@
 	}
 
 	Navbar.prototype._buildNavbarList = function () {
-		//Get list of headers and build navbar from list
 		var navList = app.store.getNavbarItems();
 
 		navList.forEach(function (header) {
