@@ -7,7 +7,7 @@
 		},
 
 		redirectHeaderItem: function (headerItem) {
-			app.store.receive(app.store.types.RECEIVE_HEADER_ITEM, header);
+			app.store.receive(app.store.types.RECEIVE_HEADER_ITEM, headerItem);
 		}
 	};
 })();

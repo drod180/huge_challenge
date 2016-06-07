@@ -14,7 +14,7 @@
 
 		addListener: function (type, callback) {
 			if (! listener[type]) {
-				listener[type] = callback;
+				listener[type] = [callback];
 			} else {
 				listener[type].push(callback);
 			}
@@ -24,7 +24,7 @@
 				listener = listener.filter(function (cb) {
 					return cb !== callback;
 				});
-			);
+			});
 		},
 
     receive: function (type, data) {
@@ -34,16 +34,31 @@
           items = data;
           break;
 				case types.RECEIVE_NAVBAR_ITEM:
+					debugger;
 					currentHeader = data;
 					break;
 				case types.RECEIVE_HEADER_ITEM:
 					break;
 			}
 
-			listener[key].forEach( function (callback) {
+			listener[type] && listener[type].forEach( function (callback) {
 				callback();
 			})
-		}
+		},
 
+		getNavbarItems: function () {
+			var navItems = items["items"];
+			var navLabels = [];
+
+			navItems.forEach(function (el) {
+				for (var keys in el) {
+					if (keys === "label") {
+						navLabels.push(el[keys]);
+					}
+				}
+			});
+
+			return navLabels;
+		}
   };
 })();

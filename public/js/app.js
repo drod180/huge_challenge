@@ -2,6 +2,19 @@
   "use strict";
 
   var app = {};
+(function () {
+'use strict';
+
+	app.actions = {
+		updateHeaderItems: function (header) {
+			app.store.receive(app.store.types.RECEIVE_NAVBAR_ITEM, header);
+		},
+
+		redirectHeaderItem: function (headerItem) {
+			app.store.receive(app.store.types.RECEIVE_HEADER_ITEM, headerItem);
+		}
+	};
+})();
 (function() {
 
 	function request(inputOptions) {
@@ -48,15 +61,50 @@
 	}
 })();
 (function () {
+'use strict';
+
+	function HeaderItem(root) {
+		this._root = root;
+		this._title = this._root.innerHTML;
+
+		this._root.addEventListener('click', this._clickHeaderItem.bind(this));
+	}
+
+	HeaderItem.prototype._clickHeaderItem = function () {
+		app.actions.redirectHeaderItem(this._title);
+	}
+
+	app.HeaderItem = HeaderItem;
+})();
+(function () {
+'use strict';
+
+	function HeaderItems(headerName) {
+		this._headerName = headerName;
+		this._storeToken = this._addStoreListener();
+	}
+
+	HeaderItems.prototype._addStoreListener = function () {
+		return app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._buildHeaderList);
+	}
+
+	HeaderItems.prototype._removeStoreListener = function () {
+		this._storeToken();
+	}
+
+	HeaderItems.prototype._buildHeaderList = function () {
+		//Get header list and build headerItem list
+	}
+
+	app.HeaderItems = HeaderItems;
+})();
+(function () {
   app.main = {
     start: function () {
       var apiUtil = app.apiUtil;
 			var headers = document.getElementById('navbar-header').children;
-			var navBarItems = [];
-
-			[].forEach.call(headers, function (header) {
-				navBarItems.push(new app.NavbarItem(header));
-			});
+			var navbar = new app.Navbar(headers);
+			
 			apiUtil.fetchItems();
     }
   }
@@ -64,33 +112,84 @@
 (function () {
 'use strict';
 
-	function NavbarItem(root) {
-		this._root = root;
-		this._name = this._root.innerHTML;
+	function NavbarItem(parent, name) {
+		this._parent = parent;
+		this._name = name;
 
-		this._root.addEventListener('click', this._showItems.bind(this));
+		this._createItem();
+		this._root.addEventListener('click', this._clickHeader.bind(this));
 	}
 
-	NavbarItem.prototype._showItems = function () {
+	NavbarItem.prototype._createItem = function () {
+		this._root = document.createElement("li");
+		this._root.innerHTML = this._name;
+		this._parent.appendChild(this._root);
+	}
+
+	NavbarItem.prototype._clickHeader = function () {
 		debugger
-		app.store.receive(app.store.types.SHOW_HEADER_ITEMS, this._name);
+		app.actions.updateHeaderItems(this._name);
 	}
 
 	app.NavbarItem = NavbarItem;
 })();
 (function () {
+'use strict';
+
+	function Navbar(headers) {
+		this._root = document.getElementById("navbar-header");
+		this._headers = headers;
+		this._navbarItems = [];
+		this._storeToken = this._addStoreListener();
+	}
+
+	Navbar.prototype._addStoreListener = function () {
+		return app.store.addListener(app.store.types.RECEIVE_ITEMS, this._buildNavbarList.bind(this));
+	}
+
+	Navbar.prototype._removeStoreListener = function () {
+		this._storeToken();
+	}
+
+	Navbar.prototype._buildNavbarList = function () {
+		//Get list of headers and build navbar from list
+		var navList = app.store.getNavbarItems();
+
+		navList.forEach(function (header) {
+			this._navbarItems.push(new app.NavbarItem(this._root, header));
+		}, this);
+	}
+
+	app.Navbar = Navbar;
+})();
+(function () {
  "use strict";
 
+	var listener = {};
 	var items = {};
 	var currentHeader = null;
-	var currentItem = null;
 
   app.store = {
     types: {
 			RECEIVE_ITEMS: 'RECEIVE_ITEMS',
-			SHOW_HEADER_ITEMS: 'SHOW_HEADER_ITEMS',
-			SHOW_SECONDARY_ITEMS: 'SHOW_SECONDARY_ITEMS'
+			RECEIVE_NAVBAR_ITEM: 'RECEIVE_NAVBAR_ITEM',
+			RECEIVE_HEADER_ITEM: 'RECEIVE_HEADER_ITEM'
     },
+
+		addListener: function (type, callback) {
+			if (! listener[type]) {
+				listener[type] = [callback];
+			} else {
+				listener[type].push(callback);
+			}
+
+			//return function to allow for removing a listener
+			return (function () {
+				listener = listener.filter(function (cb) {
+					return cb !== callback;
+				});
+			});
+		},
 
     receive: function (type, data) {
       var types = app.store.types;
@@ -98,14 +197,32 @@
 				case types.RECEIVE_ITEMS:
           items = data;
           break;
-				case types.SHOW_HEADER_ITEMS:
+				case types.RECEIVE_NAVBAR_ITEM:
+					debugger;
 					currentHeader = data;
-					currentItem = null;
 					break;
-				case types.SHOW_SECONDARY_ITEMS:
-					currentItem = data;
+				case types.RECEIVE_HEADER_ITEM:
 					break;
 			}
+
+			listener[type] && listener[type].forEach( function (callback) {
+				callback();
+			})
+		},
+
+		getNavbarItems: function () {
+			var navItems = items["items"];
+			var navLabels = [];
+
+			navItems.forEach(function (el) {
+				for (var keys in el) {
+					if (keys === "label") {
+						navLabels.push(el[keys]);
+					}
+				}
+			});
+
+			return navLabels;
 		}
   };
 })();

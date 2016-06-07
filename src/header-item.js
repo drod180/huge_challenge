@@ -8,7 +8,7 @@
 		this._root.addEventListener('click', this._clickHeaderItem.bind(this));
 	}
 
-	HeaderItems.prototype._clickHeaderItem = function () {
+	HeaderItem.prototype._clickHeaderItem = function () {
 		app.actions.redirectHeaderItem(this._title);
 	}
 
