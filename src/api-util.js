@@ -30,26 +30,14 @@
 	}
 
 	app.apiUtil = {
-		fetchHeaderItems: function (header) {
+		fetchItems: function () {
 			request({
-	        url: "#/" + header,
+	        url: "/api/nav.json",
 	        onLoad: function (data) {
-	          app.store.receive(app.store.types.RECEIVE_HEADERS_ITEMS, data);
+	          app.store.receive(app.store.types.RECEIVE_ITEMS, data);
 	        },
 	        onError: function () {
-	          app.store.receive(app.store.types.ERROR_HEADERS_ITEMS);
-	        }
-	      });
-		}
-
-		fetchSubItems: function (header, item) {
-			request({
-	        url: "#/" + header + "/" + item,
-	        onLoad: function (data) {
-	          app.store.receive(app.store.types.RECEIVE_SUB_ITEMS, data);
-	        },
-	        onError: function () {
-	          app.store.receive(app.store.types.ERROR_SUB_ITEMS);
+	          app.store.receive(app.store.types.ERROR_ITEMS);
 	        }
 	      });
 		}
