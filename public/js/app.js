@@ -194,7 +194,6 @@
           items = data;
           break;
 				case types.RECEIVE_NAVBAR_ITEM:
-					debugger;
 					currentHeader = data;
 					break;
 				case types.RECEIVE_HEADER_ITEM:

@@ -58,6 +58,26 @@
 			});
 
 			return navLabels;
+		},
+
+		getHeaderItems: function () {
+			if (!currentHeader) { return []; }
+			var navItems = items["items"];
+			var headerItems = [];
+
+			navItems.forEach(function (el) {
+				for (var keys in el) {
+					if (keys === "label" && el[keys] === currentHeader) {
+						headerItems = el["items"].slice();
+					}
+				}
+			})
+
+			return headerItems;
+		},
+
+		getCurrentHeader: function () {
+			return currentHeader;
 		}
   };
 })();
