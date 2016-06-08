@@ -3,13 +3,12 @@
 
 	var listener = {};
 	var items = {};
-	var currentHeader = null;
+	var selectedNav = null;
 
   app.store = {
     types: {
 			RECEIVE_ITEMS: 'RECEIVE_ITEMS',
-			RECEIVE_NAVBAR_ITEM: 'RECEIVE_NAVBAR_ITEM',
-			RECEIVE_HEADER_ITEM: 'RECEIVE_HEADER_ITEM'
+			RECEIVE_NAVBAR_ITEM: 'RECEIVE_NAVBAR_ITEM'
     },
 
 		addListener: function (type, callback) {
@@ -34,9 +33,7 @@
           items = data;
           break;
 				case types.RECEIVE_NAVBAR_ITEM:
-					currentHeader = data;
-					break;
-				case types.RECEIVE_HEADER_ITEM:
+					selectedNav = data;
 					break;
 			}
 
@@ -50,24 +47,23 @@
 			var navLabels = [];
 
 			navItems.forEach(function (el) {
-				for (var keys in el) {
-					if (keys === "label") {
-						navLabels.push(el[keys]);
-					}
-				}
+				navLabels.push(
+					{ "label": el["label"], "url": el["url"] }
+				);
 			});
 
 			return navLabels;
 		},
 
-		getHeaderItems: function () {
-			if (!currentHeader) { return []; }
+		getHeaderItems: function (navItem) {
+			var nav = navItem === undefined ? selectedNav : navItem;
+			if (selectedNav === null) { return []; }
 			var navItems = items["items"];
 			var headerItems = [];
 
 			navItems.forEach(function (el) {
 				for (var keys in el) {
-					if (keys === "label" && el[keys] === currentHeader) {
+					if (keys === "label" && el[keys] === nav) {
 						headerItems = el["items"].slice();
 					}
 				}
@@ -76,8 +72,8 @@
 			return headerItems;
 		},
 
-		getCurrentHeader: function () {
-			return currentHeader;
+		getSelectedNav: function () {
+			return selectedNav;
 		}
   };
 })();

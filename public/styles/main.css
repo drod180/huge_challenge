@@ -1,18 +1,142 @@
 @import "fonts.css";
 
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
 body {
-  background: #ec008c;
-  color: #fff;
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+a{
+	text-decoration: none;
 }
 
-h1 {
-  position: absolute;
+.group:after {
+	display: block;
+	content: "";
+	clear: both;
+}
+/* Web */
+
+.navbar {
+	height: 72px;
+	background: #ec008c;
+	color: #fff;
+}
+
+.logo {
+	height: 24px;
+	padding: 24px 48px 24px 24px;
+}
+
+.image-body {
+	position: relative;
+  background-image: url("../images/background-image.jpg");
+  color: #fff;
+	height: 620px;
+}
+
+.headline {
+	position: absolute;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   margin: 0;
-  font: 20vmin/1 HUGEAvantGardeBold;
+  font: 120px/132px HUGEAvantGardeBold;
   letter-spacing: -0.06em;
   text-align: center;
+}
+
+.navbar-items {
+	height: 72px;
+}
+
+.logo-item {
+	float: left;
+}
+
+.navbar-item {
+	float: left;
+	font: 21px/48px HUGEAvantGardeBold;
+}
+
+.navbar-anchor {
+	display: inline-block;
+	padding: 13px 24px 11px 24px;
+	color: #fff;
+	cursor: pointer;
+}
+
+.navbar-anchor:hover {
+	background: #fff;
+	color: #ec008c;
+}
+
+.navbar-item.selected > a {
+	background: #fff;
+	color: #ec008c;
+}
+
+.header-list-container {
+	position: absolute;
+	z-index: 100;
+	padding: 12px 24px;
+	background: #fff;
+}
+
+.header-anchor {
+ 	z-index: 100;
+	font: 16px/48px GalaxieCopernicusBook;
+	color: #000;
+}
+
+.text-body {
+	padding-top: 60px;
+}
+
+.body-copy {
+	font: 24px GalaxieCopernicusBook;
+	line-height: 36px;
 }

@@ -1,8 +1,8 @@
 (function () {
 'use strict';
 
-	function HeaderItems(headerName) {
-		this._headerName = headerName;
+	function HeaderItems() {
+		this._headerName = null;
 		this._storeToken = this._addStoreListener();
 		this._headerItems = [];
 	}
@@ -12,10 +12,13 @@
 	}
 
 	HeaderItems.prototype._createElement = function () {
-		if (!this._root) { this._root.remove(); }
+		if (this._root) { this._root.remove(); }
 		this._root = document.createElement("ul");
-		var parent = document.getElementById(this._headerName);
-		parent.appendChild(this._root);
+		this._root.classList.add("header-list-container")
+		var parent = this._getParent();
+		if (parent) {
+			parent.appendChild(this._root);
+		}
 	}
 
 	HeaderItems.prototype._removeStoreListener = function () {
@@ -24,7 +27,7 @@
 
 	HeaderItems.prototype._buildHeaderList = function () {
 		var headerItemList = app.store.getHeaderItems();
-		this._headerName = app.store.getCurrentHeader();
+		this._headerName = app.store.getSelectedNav();
 
 		this._clearHeaderList();
 		this._createElement();
@@ -35,11 +38,23 @@
 	}
 
 	HeaderItems.prototype._clearHeaderList = function () {
-		if (_headerItems) {
-			_headerItems.forEach(function (headerItem) {
+		if (this._headerItems) {
+			this._headerItems.forEach(function (headerItem) {
 				headerItem.remove();
 			});
 		}
+	}
+
+	HeaderItems.prototype._getParent = function () {
+		var itemParent = null;
+		var potentialParents = document.getElementsByClassName("navbar-item");
+		[].forEach.call(potentialParents, function (parent) {
+			if (parent.children[0].innerHTML === this._headerName) {
+				itemParent = parent;
+			}
+		}.bind(this));
+
+		return itemParent;
 	}
 
 	app.HeaderItems = HeaderItems;
