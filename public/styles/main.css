@@ -119,21 +119,38 @@ a{
 	color: #ec008c;
 }
 
-.header-list-container {
+.header-list-container.contains-navs {
 	position: absolute;
 	z-index: 100;
-	padding: 12px 24px;
+	padding: 12px 0;
 	background: #fff;
 }
 
 .header-anchor {
- 	z-index: 100;
+	display: block;
 	font: 16px/48px GalaxieCopernicusBook;
 	color: #000;
+	padding: 0 24px;
+}
+
+.header-anchor:hover {
+	background: #eee;
+	color: #ec008c;
+	cursor: pointer;
+}
+
+.dark-filter {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.5);
+	left: 0; right: 0;
+	top: 72px; bottom: 0;
+	z-index: 10;
 }
 
 .text-body {
-	padding-top: 60px;
+	padding: 60px 24px 0 24px;
+	max-width: 968px;
+	margin: 0 auto;
 }
 
 .body-copy {

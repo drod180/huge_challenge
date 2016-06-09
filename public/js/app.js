@@ -63,6 +63,33 @@
 (function () {
 'use strict';
 
+	function BodyFilter() {
+		this._root = document.getElementById("body-filter");
+		this._addStoreListener();
+	}
+
+	BodyFilter.prototype._addStoreListener = function () {
+		return app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._changeFilter.bind(this));
+	}
+
+	BodyFilter.prototype._removeStoreListener = function () {
+		this._storeToken();
+	}
+
+	BodyFilter.prototype._changeFilter = function () {
+		var currentNav = app.store.getSelectedNav();
+		if (currentNav !== null && !this._root.classList.contains("dark-filter")) {
+			this._root.classList.add("dark-filter")
+		} else if (currentNav === null && this._root.classList.contains("dark-filter")) {
+			this._root.classList.remove("dark-filter")
+		}
+	}
+
+	app.BodyFilter = BodyFilter;
+})();
+(function () {
+'use strict';
+
 	function HeaderItem(parent, details) {
 		this._parent = parent;
 		this._label = details.label;
@@ -100,15 +127,19 @@
 	}
 
 	HeaderItems.prototype._addStoreListener = function () {
-		return app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._buildHeaderList.bind(this));
+	return  app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._buildHeaderList.bind(this));
 	}
 
 	HeaderItems.prototype._createElement = function () {
 		if (this._root) { this._root.remove(); }
 		this._root = document.createElement("ul");
 		this._root.classList.add("header-list-container")
+
 		var parent = this._getParent();
 		if (parent) {
+			if (parent.classList.contains("filled-nav")) {
+				this._root.classList.add("contains-navs");
+			}
 			parent.appendChild(this._root);
 		}
 	}
@@ -157,6 +188,7 @@
       var apiUtil = app.apiUtil;
 			var navbar = new app.Navbar();
 			var headerItems = new app.HeaderItems();
+			var bodyFilter = new app.BodyFilter();
 			apiUtil.fetchItems();
     }
   }
@@ -170,6 +202,7 @@
 		this._url = details.url;
 		this._id = "navbar-" + id;
 
+		this._empty = this._empty();
 		this._createElement();
 	}
 
@@ -178,6 +211,10 @@
 		this._root.setAttribute("id", this._id);
 		this._root.classList.add("navbar-item");
 
+		if(!this._empty) {
+			this._root.classList.add("filled-nav");
+		}
+
 		var anchor = document.createElement("a");
 		anchor.innerHTML = this._label;
 		anchor.setAttribute("href", this._url)
@@ -185,6 +222,11 @@
 
 		this._root.appendChild(anchor);
 		this._parent.appendChild(this._root);
+	}
+
+	NavbarItem.prototype._empty = function () {
+		var items = app.store.getHeaderItems(this._label);
+		return (items.length === 0);
 	}
 
 	app.NavbarItem = NavbarItem;
@@ -301,14 +343,15 @@
 			return navLabels;
 		},
 
-		getHeaderItems: function () {
-			if (!selectedNav) { return []; }
+		getHeaderItems: function (navItem) {
+			var nav = navItem === undefined ? selectedNav : navItem;
+			if (nav === null) { return []; }
 			var navItems = items["items"];
 			var headerItems = [];
 
 			navItems.forEach(function (el) {
 				for (var keys in el) {
-					if (keys === "label" && el[keys] === selectedNav) {
+					if (keys === "label" && el[keys] === nav) {
 						headerItems = el["items"].slice();
 					}
 				}

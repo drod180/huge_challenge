@@ -57,7 +57,7 @@
 
 		getHeaderItems: function (navItem) {
 			var nav = navItem === undefined ? selectedNav : navItem;
-			if (selectedNav === null) { return []; }
+			if (nav === null) { return []; }
 			var navItems = items["items"];
 			var headerItems = [];
 

@@ -8,15 +8,19 @@
 	}
 
 	HeaderItems.prototype._addStoreListener = function () {
-		return app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._buildHeaderList.bind(this));
+	return  app.store.addListener(app.store.types.RECEIVE_NAVBAR_ITEM, this._buildHeaderList.bind(this));
 	}
 
 	HeaderItems.prototype._createElement = function () {
 		if (this._root) { this._root.remove(); }
 		this._root = document.createElement("ul");
 		this._root.classList.add("header-list-container")
+
 		var parent = this._getParent();
 		if (parent) {
+			if (parent.classList.contains("filled-nav")) {
+				this._root.classList.add("contains-navs");
+			}
 			parent.appendChild(this._root);
 		}
 	}

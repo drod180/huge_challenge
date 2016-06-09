@@ -7,7 +7,7 @@
 		this._url = details.url;
 		this._id = "navbar-" + id;
 
-		this.empty = this._empty();
+		this._empty = this._empty();
 		this._createElement();
 	}
 
@@ -15,6 +15,10 @@
 		this._root = document.createElement("li");
 		this._root.setAttribute("id", this._id);
 		this._root.classList.add("navbar-item");
+
+		if(!this._empty) {
+			this._root.classList.add("filled-nav");
+		}
 
 		var anchor = document.createElement("a");
 		anchor.innerHTML = this._label;
@@ -27,7 +31,8 @@
 
 	NavbarItem.prototype._empty = function () {
 		var items = app.store.getHeaderItems(this._label);
-		return items.length > 0;
+		return (items.length === 0);
 	}
+
 	app.NavbarItem = NavbarItem;
 })();
