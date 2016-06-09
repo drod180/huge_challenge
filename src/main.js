@@ -5,7 +5,7 @@
 			var navbar = new app.Navbar();
 			var headerItems = new app.HeaderItems();
 			var bodyFilter = new app.BodyFilter();
-			var hamburger = new app.Hamburger();
+			var navigator = new app.Navigator();
 			apiUtil.fetchItems();
     }
   }
