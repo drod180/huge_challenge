@@ -185,12 +185,14 @@ a{
 
 	.close {
 		cursor: pointer;
-		float: right;
+		position: absolute;
+    right: 0;
 		height: 20px;
 		padding: 20px 24px;
-		position: relative;
 		width: 24px;
 		background: #ec008c;
+    -webkit-transition: right .5s linear;
+    transition: right .5s linear;
 	}
 
 	.close div:first-child:before {
@@ -201,13 +203,15 @@ a{
 	}
 
 	.hamburger {
-	    cursor: pointer;
-	    display: block;
-	    height: 20px;
-	    padding: 20px 24px;
-	    position: relative;
-	    width: 24px;
-	    background: #ec008c;
+    cursor: pointer;
+    position: absolute;
+    right: calc(100vw - 72px);
+    height: 20px;
+    padding: 20px 24px;
+    width: 24px;
+    background: #ec008c;
+    -webkit-transition: right .5s linear;
+    transition: right .5s linear;
 	}
 	/*
 	The white stripes in the hamburger button
@@ -223,10 +227,17 @@ a{
 	}
 
 	.logo {
-		display: none;
+    position: absolute;
+    left: -100vw;
 		width: 50px;
 		height: auto;
 		padding: 20px 24px;
+    -webkit-transition: left .5s linear;
+    transition: left .5s linear;
+	}
+
+  .logo.mobile-open {
+    left: 0px;
 	}
 
 	.logo-item {
@@ -234,19 +245,32 @@ a{
 		width: 100%;
 	}
 
-	.navbar-header {
-		display: none;
+  .navbar-header {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    left: calc(72px - 100vw);
+    height: calc(100vh - 84px);
+    overflow: auto;
+    background: #fff;
+    padding-top: 12px;
+  }
+
+	.navbar-header.mobile-open {
 		position: absolute;
 		top: 60px;
 		right: 72px;
 		left: 0;
-		height: calc(100vh - 84px);
+		height: calc(100vh - 72px);
 		overflow: auto;
 		background: #fff;
-		padding: 12px 0;
+		padding-top: 12px;
+    -webkit-transition: left .5s linear;
+    transition: left .5s linear;
 	}
 
 	.navbar-item {
+    position: relative;
 		float: left;
 		width: 100%;
 		font: 21px/48px HUGEAvantGardeBold;
@@ -264,11 +288,32 @@ a{
 		background: #eee;
 	}
 
-	.navbar-item.selected > a {
+  .filled-nav.selected:before {
+    -webkit-transform: rotate(180deg) scale(.55);
+    transform: rotate(180deg) scale(.55);
+  }
+
+	.filled-nav:before {
+    opacity: 0;
+    position: absolute;
+    clear: both;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    content: "";
+    background-image: url("../images/chevron.png");
+    pointer-events: none;
+    background-position: center;
+    -webkit-transform: scale(.55);
+    transform: scale(.55);
+    -webkit-transition: transform .5s;
+    transition: transform .5s;
 	}
 
-	.header-list-container.contains-navs {
-	}
+  .mobile-open > .filled-nav:before {
+    opacity: 1;
+    transition-delay: opacity 0.5s;
+  }
 
 	.header-anchor {
 		display: block;
@@ -283,7 +328,7 @@ a{
 	}
 
   .copywrite {
-    margin-top: 100vh;
+    margin-top: calc(100vh - 42px);
     width: calc(100% - 72px);
 		background: #fff;
 		padding: 16px 24px;
@@ -291,6 +336,9 @@ a{
 		font: 12px/16px HelveticaNeueRegular;
   }
 
+  .filter {
+    background: rgba(0, 0, 0, 0);
+  }
 
 	.mobile-open.body-container > section > .filter {
 		position: absolute;
@@ -298,6 +346,7 @@ a{
 		width: 100%;
 		height: 100vh;
 		z-index: 10;
+    transition: background .5s;
 	}
 
 	.mobile-open {
@@ -309,7 +358,7 @@ a{
 		float: right;
 		overflow: hidden;
 		width: 100%;
-		height: 100vh;
+		height: calc(100vh - 60px);
     pointer-events: none;
 	}
 
@@ -318,12 +367,18 @@ a{
 		width: 100%;
 		top: 0;
 		left: calc(100% - 72px);
-		right: -calc(100% - 72px);
 		bottom: 0;
 	}
 
 	.body {
 		display: block;
+    position: absolute;
+		width: 100%;
+		top: 60px;
+		left: 0;
+		bottom: 0;
+    -webkit-transition: left .5s linear;
+    transition: left .5s linear;
 	}
 
 	.main-body {
