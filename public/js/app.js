@@ -256,6 +256,13 @@
 		navList.forEach(function (header, idx) {
 			this._navbarItems["navbar-" + idx] = (new app.NavbarItem(this._root, header, idx));
 		}, this);
+
+		var copywrite = document.createElement("li");
+		var copywriteP = document.createElement("a");
+		copywriteP.innerHTML = "© 2014 Huge. All Rights Reserved.";
+		copywrite.appendChild(copywriteP);
+		copywrite.classList.add("copywrite");
+		this._root.appendChild(copywrite);
 	}
 
 	Navbar.prototype._navClick = function (e) {
@@ -303,8 +310,8 @@
 
 	Navigator.prototype._checkNavClick = function (e) {
 		var target = e.target;
-		while (target !== this._parent && target.parentElement !== null) {
-			target = target.parentElement;
+		while (target !== this._parent && target.parentNode !== null) {
+			target = target.parentNode;
 		}
 
 		if (target !== this._parent) {

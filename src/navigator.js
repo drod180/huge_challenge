@@ -14,8 +14,8 @@
 
 	Navigator.prototype._checkNavClick = function (e) {
 		var target = e.target;
-		while (target !== this._parent && target.parentElement !== null) {
-			target = target.parentElement;
+		while (target !== this._parent && target.parentNode !== null) {
+			target = target.parentNode;
 		}
 
 		if (target !== this._parent) {

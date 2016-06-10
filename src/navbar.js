@@ -22,6 +22,13 @@
 		navList.forEach(function (header, idx) {
 			this._navbarItems["navbar-" + idx] = (new app.NavbarItem(this._root, header, idx));
 		}, this);
+
+		var copywrite = document.createElement("li");
+		var copywriteP = document.createElement("a");
+		copywriteP.innerHTML = "© 2014 Huge. All Rights Reserved.";
+		copywrite.appendChild(copywriteP);
+		copywrite.classList.add("copywrite");
+		this._root.appendChild(copywrite);
 	}
 
 	Navbar.prototype._navClick = function (e) {

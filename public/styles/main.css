@@ -168,6 +168,10 @@ a{
 		font: 24px GalaxieCopernicusBook;
 		line-height: 36px;
 	}
+
+	.copywrite {
+		display: none;
+	}
 }
 
 /* mobile */
@@ -232,11 +236,11 @@ a{
 
 	.navbar-header {
 		display: none;
-		position: absolute;;
+		position: absolute;
 		top: 60px;
 		right: 72px;
 		left: 0;
-		bottom: 0;
+		height: 100vh;
 		overflow: auto;
 		background: #fff;
 		padding: 12px 0;
@@ -244,31 +248,26 @@ a{
 
 	.navbar-item {
 		float: left;
+		width: 100%;
 		font: 21px/48px HUGEAvantGardeBold;
 	}
 
 	.navbar-anchor {
 		display: inline-block;
-		padding: 13px 24px 11px 24px;
-		color: #fff;
+		padding-left: 24px;
+		width: calc(100% - 24px);
+		color: #000;
 		cursor: pointer;
 	}
 
 	.navbar-anchor:hover {
-		background: #fff;
-		color: #ec008c;
+		background: #eee;
 	}
 
 	.navbar-item.selected > a {
-		background: #fff;
-		color: #ec008c;
 	}
 
 	.header-list-container.contains-navs {
-		position: absolute;
-		z-index: 100;
-		padding: 12px 0;
-		background: #fff;
 	}
 
 	.header-anchor {
@@ -281,7 +280,16 @@ a{
 	.header-anchor:hover {
 		background: #eee;
 		color: #ec008c;
-		cursor: pointer;
+	}
+
+	.copywrite {
+		float: left;
+		padding: 16px 24px;
+	}
+
+	.copywrite > a {
+		color: #000;
+		font: 12px/16px HelveticaNeueRegular;
 	}
 
 	.mobile-open.body-container > section > .filter {
@@ -298,8 +306,9 @@ a{
 
 	.mobile-open.body-container {
 		position: relative;
+		float: right;
 		overflow: hidden;
-		width: 100%;
+		width: 72px;
 		height: 100vh;
 	}
 
