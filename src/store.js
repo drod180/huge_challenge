@@ -43,7 +43,7 @@
 		},
 
 		getNavbarItems: function () {
-			var navItems = items["items"];
+			var navItems = items["items"] === undefined ? [] : items["items"];
 			var navLabels = [];
 
 			navItems.forEach(function (el) {

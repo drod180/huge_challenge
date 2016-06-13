@@ -47,7 +47,7 @@
 	}
 
 	app.apiUtil = {
-		fetchItems: function () {
+		fetchItems: function (callback) {
 			request({
 	        url: "/api/nav.json",
 	        onLoad: function (data) {
@@ -55,7 +55,10 @@
 	        },
 	        onError: function () {
 	          app.store.receive(app.store.types.ERROR_ITEMS);
-	        }
+	        },
+          onComplete: function () {
+            callback && callback();
+          }
 	      });
 		}
 	}
@@ -86,6 +89,114 @@
 	}
 
 	app.BodyFilter = BodyFilter;
+})();
+(function () {
+'use strict';
+
+  var testEq = function (current, expected) {
+    console.log("current is: " + current + " expected: " + expected);
+    var passed = current === expected;
+    console.log(passed ? "Passed" : "Failed");
+    return current === expected;
+  }
+
+  var testNotEq = function (current, expected) {
+    console.log("current is: " + current + " NOT expected: " + expected);
+    var passed = current !== expected;
+    console.log(passed ? "Passed" : "Failed");
+    return current !== expected;
+  }
+
+
+
+  app.endToEndTest = {
+
+    setupTest: function (callback) {
+      this._store = app.store;
+      this._navbar = new app.Navbar();
+      this._header = new app.HeaderItems();
+      this._passed = 0;
+      this._failed = 0;
+      callback && callback();
+    },
+
+    getData: function (callback) {
+      var items = this._store.getNavbarItems();
+      console.log("Store is empty before retreiving data");
+      testEq(items.length, 0) ? this._passed += 1 : this._failed += 1;
+
+      app.apiUtil.fetchItems(function () {
+        items = this._store.getNavbarItems();
+        console.log("Store gets data");
+        testNotEq(items.length, 0) ? this._passed += 1 : this._failed += 1;
+
+        callback && callback();
+      }.bind(this));
+    },
+
+    buildNavbar: function (callback) {
+      app.apiUtil.fetchItems(function () {
+        this._navbar._buildNavbarList();
+        var navItems = this._navbar._navbarItems;
+        console.log("Create navbar");
+        testNotEq(Object.keys(navItems).length, 0) ? this._passed += 1 : this._failed += 1;
+
+        var items = this._store.getNavbarItems();
+        var matching = items.every(function (item) {
+           for (var keys in navItems) {
+            if (navItems[keys]._label === item.label){
+              return true;
+            }
+           }
+           return false;
+        })
+
+        console.log("Check if navbar items match store");
+        console.log(matching ? "Passed" : "Failed");
+        matching ? this._passed += 1 : this._failed += 1;
+        callback && callback();
+      }.bind(this));
+    },
+
+    buildHeaderItems: function (callback) {
+      app.apiUtil.fetchItems(function () {
+        this._navbar._buildNavbarList();
+        this._header._buildHeaderList();
+        var navItems = this._navbar._navbarItems;
+        var headerItems = this._header._headerItems;
+        console.log("Build empty header")
+        testEq(headerItems.length, 0) ? this._passed += 1 : this._failed += 1;
+
+        var matching = true;
+         for (var keys in navItems) {
+           app.actions.updateHeaderItems(navItems[keys]._label)
+           headerItems = this._header._headerItems;
+           var storeItems = this._store.getHeaderItems(navItems[keys]._label);
+
+           matching = storeItems.length === headerItems.length;
+         }
+
+        console.log("Check if header items match store");
+        console.log(matching ? "Passed" : "Failed");
+        matching ? this._passed += 1 : this._failed += 1;
+        callback && callback();
+      }.bind(this));
+    },
+
+    runTests: function () {
+      this.setupTest(this.getData.bind(this,
+        this.buildNavbar.bind(this,
+          this.buildHeaderItems.bind(this,
+            this.endTest.bind(this)
+      ))));
+    },
+
+    endTest: function () {
+      this._navbar.remove()
+      var total = this._passed + this._failed;
+      console.log(total + " tests run, " + this._passed + " passed " + this._failed + " failed!");
+    }
+  }
 })();
 (function () {
 'use strict';
@@ -166,6 +277,7 @@
 				headerItem.remove();
 			});
 		}
+    this._headerItems = [];
 	}
 
 	HeaderItems.prototype._getParent = function () {
@@ -191,6 +303,11 @@
 			var bodyFilter = new app.BodyFilter();
 			var navigator = new app.Navigator();
 			apiUtil.fetchItems();
+    },
+
+    test: function () {
+      var tests = app.endToEndTest;
+      tests.runTests();
     }
   }
 })();
@@ -257,13 +374,17 @@
 			this._navbarItems["navbar-" + idx] = (new app.NavbarItem(this._root, header, idx));
 		}, this);
 
-		var copywrite = document.createElement("li");
-		var copywriteP = document.createElement("a");
-		copywriteP.innerHTML = "© 2014 Huge. All Rights Reserved.";
-		copywrite.appendChild(copywriteP);
+		this._addCopywrite();
+	}
+
+  Navbar.prototype._addCopywrite = function () {
+    var copywrite = document.createElement("li");
+		var copywriteAnchor = document.createElement("a");
+		copywriteAnchor.innerHTML = "© 2014 Huge. All Rights Reserved.";
+		copywrite.appendChild(copywriteAnchor);
 		copywrite.classList.add("copywrite");
 		this._root.appendChild(copywrite);
-	}
+  }
 
 	Navbar.prototype._navClick = function (e) {
 		var target = this._determineTarget(e.target);
@@ -292,6 +413,7 @@
 			target.classList.add("selected");
 		}
 	}
+  
 	app.Navbar = Navbar;
 })();
 (function () {
@@ -390,7 +512,7 @@
 		},
 
 		getNavbarItems: function () {
-			var navItems = items["items"];
+			var navItems = items["items"] === undefined ? [] : items["items"];
 			var navLabels = [];
 
 			navItems.forEach(function (el) {

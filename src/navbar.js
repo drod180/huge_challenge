@@ -23,13 +23,17 @@
 			this._navbarItems["navbar-" + idx] = (new app.NavbarItem(this._root, header, idx));
 		}, this);
 
-		var copywrite = document.createElement("li");
-		var copywriteP = document.createElement("a");
-		copywriteP.innerHTML = "© 2014 Huge. All Rights Reserved.";
-		copywrite.appendChild(copywriteP);
+		this._addCopywrite();
+	}
+
+  Navbar.prototype._addCopywrite = function () {
+    var copywrite = document.createElement("li");
+		var copywriteAnchor = document.createElement("a");
+		copywriteAnchor.innerHTML = "© 2014 Huge. All Rights Reserved.";
+		copywrite.appendChild(copywriteAnchor);
 		copywrite.classList.add("copywrite");
 		this._root.appendChild(copywrite);
-	}
+  }
 
 	Navbar.prototype._navClick = function (e) {
 		var target = this._determineTarget(e.target);
@@ -58,5 +62,6 @@
 			target.classList.add("selected");
 		}
 	}
+  
 	app.Navbar = Navbar;
 })();

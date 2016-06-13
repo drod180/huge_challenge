@@ -30,7 +30,7 @@
 	}
 
 	app.apiUtil = {
-		fetchItems: function () {
+		fetchItems: function (callback) {
 			request({
 	        url: "/api/nav.json",
 	        onLoad: function (data) {
@@ -38,7 +38,10 @@
 	        },
 	        onError: function () {
 	          app.store.receive(app.store.types.ERROR_ITEMS);
-	        }
+	        },
+          onComplete: function () {
+            callback && callback();
+          }
 	      });
 		}
 	}

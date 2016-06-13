@@ -7,6 +7,11 @@
 			var bodyFilter = new app.BodyFilter();
 			var navigator = new app.Navigator();
 			apiUtil.fetchItems();
+    },
+
+    test: function () {
+      var tests = app.endToEndTest;
+      tests.runTests();
     }
   }
 })();

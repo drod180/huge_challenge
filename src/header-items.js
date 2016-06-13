@@ -47,6 +47,7 @@
 				headerItem.remove();
 			});
 		}
+    this._headerItems = [];
 	}
 
 	HeaderItems.prototype._getParent = function () {
